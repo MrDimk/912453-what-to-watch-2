@@ -1,7 +1,7 @@
 # Личный проект «Что посмотреть»
 
 * Студент: [Dmitriy Kozlov](https://up.htmlacademy.ru/nodejs-api/2/user/912453).
-* Наставник: `Неизвестно`.
+* Наставник: [Глеб Клецков](https://htmlacademy.ru/profile/id1487865).
 
 ---
 
