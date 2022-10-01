@@ -1,9 +1,9 @@
 import {User} from './user.type';
 
 export type Film = {
-  name: string,
+  title: string,
   description: string,
-  publicDate: Date,
+  postDate: Date,
   genres: string[],
   releaseYear: number,
   rating: number,

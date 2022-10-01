@@ -1,48 +1,34 @@
 import {FileReaderInterface} from './file-reader.interface.js';
-import {readFileSync} from 'fs';
-import {Film} from '../../types/film.type.js';
+import EventEmitter from 'events';
+import {createReadStream} from 'fs';
 
-export default class TsvFileReader implements FileReaderInterface {
-  private rawData = '';
-
-  constructor(public name: string) { }
-
-  public read():void {
-    this.rawData = readFileSync(this.name, { encoding: 'utf-8' });
+export default class TsvFileReader extends EventEmitter implements FileReaderInterface {
+  constructor(public fileName: string) {
+    super();
   }
 
-  public toArray(): Film[] {
-    if (!this.rawData) {
-      return [];
+  public async read(): Promise<void> {
+    const stream = createReadStream(this.fileName, {
+      highWaterMark: 16384,
+      encoding: 'utf-8',
+    });
+
+    let lineRead = '';
+    let endLinePosition = -1;
+    let importedRowCount = 0;
+
+    for await (const chunk of stream) {
+      lineRead += chunk.toString();
+
+      while ((endLinePosition = lineRead.indexOf('\n')) >= 0) {
+        const completeRow = lineRead.slice(0, endLinePosition + 1);
+        lineRead = lineRead.slice(++endLinePosition);
+        importedRowCount++;
+
+        this.emit('line', completeRow);
+      }
     }
 
-    return this.rawData
-      .split('\n')
-      .filter((row) => row.trim() !== '')
-      .map((line) => line.split('\t'))
-      .map(([name, description, publicDate, genres, releaseYear, rating, preview, video, actors, director, duration, commentsCount, userName,
-        userEmail, userAvatar, userPassword, poster, backgroundImage, backgroundColor,]) => ({
-        name,
-        description,
-        publicDate: new Date(publicDate),
-        genres: genres.split(','),
-        releaseYear: Number.parseInt(releaseYear, 10),
-        rating: Number.parseInt(rating, 10),
-        preview,
-        video,
-        actors: actors.split(','),
-        director,
-        duration: Number.parseInt(duration, 10),
-        commentsCount: Number.parseInt(commentsCount, 10),
-        user: {
-          name: userName,
-          email: userEmail,
-          avatar: userAvatar,
-          password: userPassword,
-        },
-        poster,
-        backgroundImage,
-        backgroundColor
-      }));
+    this.emit('end', importedRowCount);
   }
 }
