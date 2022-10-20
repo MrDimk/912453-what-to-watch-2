@@ -1,10 +1,10 @@
-import {Film} from '../types/film.type';
+import { Film } from '../types/film.type';
 
-export const createMovie = (row: string): Film =>{
+export const createMovie = (row: string): Film => {
   const tokens = row.replace('\n', ' ').split('\t');
   const [title, description, postDate, genres, releaseYear, rating, preview, video, actors, director, duration, commentsCount, userName,
     userEmail, userAvatar, userPassword, poster, backgroundImage, backgroundColor,] = tokens;
-  return {
+  const result: Film = {
     title,
     description,
     postDate: new Date(postDate),
@@ -26,5 +26,6 @@ export const createMovie = (row: string): Film =>{
     poster,
     backgroundImage,
     backgroundColor
-  } as Film;
+  };
+  return result;
 };
