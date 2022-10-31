@@ -22,14 +22,13 @@ export default class MovieGenerator implements MovieGeneratorInterface {
     const userName = getRandomItem(this.mockData.userNames);
     const email = getRandomItem(this.mockData.emails);
     const avatar = getRandomItem(this.mockData.avatars);
-    const password = 'qwerty';
     const poster = getRandomItem(this.mockData.posters);
     const bgImage = getRandomItem(this.mockData.bgImages);
     const color = getRandomItem(this.mockData.colors);
 
     return [
       title, description, postDate, genres, releaseYear, rating, preview, video, actors, director,
-      duration, commentsCount, userName, email, avatar, password, poster, bgImage, color
+      duration, commentsCount, userName, email, avatar, poster, bgImage, color
     ].join('\t');
   }
 }

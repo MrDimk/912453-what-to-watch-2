@@ -1,10 +1,11 @@
-import { Film } from '../types/film.type';
+import {Film} from '../types/film.type';
+import crypto from 'crypto';
 
 export const createMovie = (row: string): Film => {
   const tokens = row.replace('\n', ' ').split('\t');
   const [title, description, postDate, genres, releaseYear, rating, preview, video, actors, director, duration, commentsCount, userName,
-    userEmail, userAvatar, userPassword, poster, backgroundImage, backgroundColor,] = tokens;
-  const result: Film = {
+    userEmail, userAvatar, poster, backgroundImage, backgroundColor,] = tokens;
+  return {
     title,
     description,
     postDate: new Date(postDate),
@@ -20,12 +21,15 @@ export const createMovie = (row: string): Film => {
     user: {
       name: userName,
       email: userEmail,
-      avatar: userAvatar,
-      password: userPassword,
+      avatar: userAvatar
     },
     poster,
     backgroundImage,
     backgroundColor
   };
-  return result;
+};
+
+export const createSHA256 = (line: string, salt: string): string => {
+  const shaHasher = crypto.createHmac('sha256', salt);
+  return shaHasher.update(line).digest('hex');
 };
